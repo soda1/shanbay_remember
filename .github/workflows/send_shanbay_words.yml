@@ -12,6 +12,9 @@ on:
       - app.js
 env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  TELE_TOKEN: ${{ secrets.TELE_TOKEN }}
+  TELE_CHAT_ID: ${{ secrets.TELE_CHAT_ID }}
+  ANKI_URL: ${{ secrets.ANKI_URL }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -40,13 +43,18 @@ jobs:
       - name: Run Script
         run: |
           node app.js ${{ secrets.TELE_TOKEN }} ${{ secrets.TELE_CHAT_ID }} "${{ secrets.ANKI_URL }}"
+      # - name: Check file existence
+      #   id: check_files
+      #   uses: andstor/file-existence-action@v2
+      #   with:
+      #     files: "MP3_NEW/1.audio, MP3_REVIEW/1.audio"
       - name: Check file existence
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: "MP3_NEW/1.audio, MP3_REVIEW/1.audio"
+          files: "new_article.mp3"
       - name: use ffmpeg combine and send
-        id: setup-ffmpeg
+        id: steup-ffmpeg
         run: | 
           # for i in $(ls -1a MP3_NEW/*.audio); do ffmpeg -i $i $i.mp3; done
           # for i in $(ls -1a MP3_REVIEW/*.audio); do ffmpeg -i $i $i.mp3; done

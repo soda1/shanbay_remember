@@ -3,26 +3,18 @@ const require = createRequire(import.meta.url);
 const https = require("https");
 const fs = require("fs");
 const { spawn } = require('child_process');
-const { Configuration, OpenAIApi } = require("openai");
-const { exit, send } = require("process");
-import API from "./api.js";
-import { invoke } from "./anki.js"
+const { Configuration, OpenAIApi } = require("openai")
+const { exit, send } = require("process")
 var tunnel = require('tunnel');
 const axios = require('axios').default;
+import { getAnkiNewWords } from "./anki.js"
+import { sendText2telegram, sendWords2telegram } from "./telegram-api.js"
 
-const args = process.argv.slice(2);
-
-if (args.length < 3) {
-  console.log("Please add telegram token,telegram chatId, and shanbay cookie")
-  exit()
-}
-const token = args[0];
-const chatId = args[1];
-const ankiURL = args[2];
-// const token = '5834402568:AAHWCwJW79tMmtnfCLLGvpQzbVZJXLFX8jg';
-// const chatId = '5567559086';
-// const ankiURL = 'http://43.139.63.70:8765'
-
+// const args = process.argv.slice(2);
+// if (args.length < 3) {
+//   console.log("Please add telegram token,telegram chatId, and shanbay cookie")
+//   exit()
+// }
 // const axiosInstance = axios.create({
 //   proxy: {
 //     host: '127.0.0.1',
@@ -34,7 +26,6 @@ const ankiURL = args[2];
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
-  // apiKey: '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',
 });
 console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAIApi(configuration);
@@ -68,81 +59,16 @@ const mp3ArticleMap = new Map([
   ["REVIEW", "review"],
 ])
 
-
-async function send2telegram(text) {
-  const data = JSON.stringify({
-    chat_id: chatId,
-    text: text,
-    parse_mode: "Markdown",
-  });
-  const options = {
-    hostname: "api.telegram.org",
-    port: 443,
-    path: "/bot" + token + "/sendMessage",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-  };
-  // options.agent  = tunnel.httpsOverHttp({
-  //   proxy: {
-  //     host: '127.0.0.1', //代理服务器域名或者ip
-  //     port: 7890, //代理服务器端口
-  //   },
-  // });
-  const req = https.request(options, (res) => {
-    console.log(`statusCode: ${res.statusCode}`);
-    res.on("data", () => {
-      console.log("succeed");
-    });
-  });
-
-  req.on("error", (error) => {
-    console.error(error);
-  });
-
-  req.write(data);
-  req.end();
-}
-
-async function downloadAudio(audioUrl, audioName, wordsType) {
-  const dirName = mp3DirMap.get(wordsType)
-  const file = fs.createWriteStream(`${dirName}/${audioName}.audio`);
-  return new Promise((resolve, reject) => {
-    https.get(audioUrl, function (response) {
-      response.pipe(file);
-      response.on("end", () => { resolve() });
-      response.on("error", (err) => { reject(err) });
-    });
-  });
-}
-
-async function getAnkiNewWords(size){
-  const params = {
-    query: "deck:4000-Essential-English-Words is:new"
-  }
-  const result = await invoke(ankiURL, 'findCards', 6, params);
-  let res = [];
-  for(let i = 0; i < size; i++){
-    const info = await invoke(ankiURL, 'cardsInfo', 6, {"cards":[result[i]]})
-    // console.log(info[0]);
-    // console.log(info[0].fields.Word.value);
-    res.push(info[0].fields.Word.value);
-    
-  }
-  // console.log(res)
-  return res;
-}
-async function sendResult(words){
+async function sendResult(words) {
   let message = `Today's ${words.length} new words to learning\n`
-  message += words.join("\n");
-  const cMessage = words.join(",");
-  message += "\n";
-  await send2telegram(message);
+  // message += words.map(item => item.word + '[' + item.ipa + ']').join("\n");
+  const cMessage = words.map(item => item.name).join(',');;
+  // message += "\n";
+  await sendText2telegram(message);
+  await sendWords2telegram(words)
   const chatGPTMessage = await chapGPT(cMessage)
   // await send2telegram(await chapGPT(chatGPTMessage));
-  await send2telegram(chatGPTMessage);
+  await sendText2telegram(chatGPTMessage);
   const articleName = 'new'
   const child = spawn('edge-tts', ['--text', `"${chatGPTMessage}"`, '--write-media', `${articleName}_article.mp3`]);
   child.stdout.on('data', (data) => {

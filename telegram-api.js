@@ -33,7 +33,7 @@ export async function sendWords2telegram(words, proxy = false) {
     const form = new FormData();
     form.append('chat_id', chatId);
     form.append('document', fs.createReadStream("MP3_NEW/" + word.word + '.mp3'));
-    axiosInstance.post(`https://api.telegram.org/bot${botToken}/sendDocument`, form, {
+    await axiosInstance.post(`https://api.telegram.org/bot${botToken}/sendDocument`, form, {
       headers: form.getHeaders()
     })
       .then(response => {

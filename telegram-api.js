@@ -8,9 +8,17 @@ const axios = require('axios').default;
 const FormData = require('form-data');
 
 
-const botToken = process.env.TELE_TOKEN
-const chatId = process.env.TELE_CHAT_ID
+let botToken = process.env.TELE_TOKEN
+let chatId = process.env.TELE_CHAT_ID
 
+export function setBotToken(token){
+  botToken = token;
+}
+export function setChatId(chat_id){
+  chatId = chat_id;
+}
+// const botToken = '5834402568:AAHWCwJW79tMmtnfCLLGvpQzbVZJXLFX8jg'
+// const chatId = '5567559086'
 // Create form data with the message and file attachments
 
 // Send the form data to the bot API using Axios
@@ -29,7 +37,7 @@ export async function sendWords2telegram(words, proxy = false) {
   }
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
-    await sendText2telegram(word.word + ' [' + word.ipa + ']', proxy);
+    // await sendText2telegram(word.word + ' [' + word.ipa + ']', proxy);
     const form = new FormData();
     form.append('chat_id', chatId);
     form.append('document', fs.createReadStream("MP3_NEW/" + word.word + '.mp3'));

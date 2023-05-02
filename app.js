@@ -62,7 +62,7 @@ const mp3ArticleMap = new Map([
 async function sendResult(words) {
   let message = `Today's ${words.length} new words to learning\n`
   // message += words.map(item => item.word + '[' + item.ipa + ']').join("\n");
-  const cMessage = words.map(item => item.name).join(',');;
+  const cMessage = words.map(item => item.word).join(',');;
   // message += "\n";
   await sendText2telegram(message);
   await sendWords2telegram(words)

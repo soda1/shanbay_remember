@@ -33,22 +33,27 @@ const openai = new OpenAIApi(configuration);
 // const openai = new OpenAIApi(configuration, undefined, axiosInstance);
 
 
-async function chapGPT(words) {
+async function chatGPT(words) {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     // copy from https://github.com/piglei/ai-vocabulary-builder
     messages: [
       {
         role: "user",
-        content: `Please write a short story which is less than 300 words, the story should use simple words and these special words must be included: ${words}. Also surround every special word with a single '*' character at the beginning and the end.`
+        content: `you will be provided  with some words delimited by triple quotes  perform the following action:
+        step1: -  explain Each word definition and  3 common scene usages
+        step2: -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.
+        Use the following format:
+        Example: <words definintion>
+        Story: <short story>
+        \`\`\`${words}\`\`\`
+        `
       }
     ],
   });
   console.log(response["data"]["choices"][0]["message"]["content"]);
   return response["data"]["choices"][0]["message"]["content"]
 };
-
-
 const mp3DirMap = new Map([
   ["NEW", "MP3_NEW"],
   ["REVIEW", "MP3_REVIEW"],
@@ -66,11 +71,12 @@ async function sendResult(words) {
   // message += "\n";
   await sendText2telegram(message);
   await sendWords2telegram(words)
-  const chatGPTMessage = await chapGPT(cMessage)
+  const chatGPTMessage = await chatGPT(cMessage)
   // await send2telegram(await chapGPT(chatGPTMessage));
+  const splits = chatGPTMessage.split('******')
   await sendText2telegram(chatGPTMessage);
   const articleName = 'new'
-  const child = spawn('edge-tts', ['--text', `"${chatGPTMessage}"`, '--write-media', `${articleName}_article.mp3`]);
+  const child = spawn('edge-tts', ['--text', `"${splits[1]}"`, '--write-media', `${articleName}_article.mp3`]);
   child.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });

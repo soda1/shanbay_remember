@@ -73,10 +73,10 @@ async function sendResult(words) {
   await sendWords2telegram(words)
   const chatGPTMessage = await chatGPT(cMessage)
   // await send2telegram(await chapGPT(chatGPTMessage));
-  const splits = chatGPTMessage.split('******')
+  const splits = chatGPTMessage.split('Story:')
   await sendText2telegram(chatGPTMessage);
   const articleName = 'new'
-  const child = spawn('edge-tts', ['--text', `"${splits[1]}"`, '--write-media', `${articleName}_article.mp3`]);
+  const child = spawn('edge-tts', ['--text', `"${splits[1].trim()}"`, '--write-media', `${articleName}_article.mp3`]);
   child.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });

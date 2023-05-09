@@ -40,12 +40,13 @@ async function chatGPT(words) {
     messages: [
       {
         role: "user",
-        content: `you are a good englist teacher, now you will be provided  with some words delimited by triple quotes, perform the following action:
-        1 -  provid  three common  meanings of each word, and each meaning have a usage
-        2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.
+        content: `you are a good englist teacher, now you will be provided  with some words delimited by triple quotes.
+        perform the following action:
+          1 -  provid  three common  meanings of each word, and each meaning have a usage
+          2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.
         Use the following output format:
-        <word>: <definition>
-        Story:<short story>
+          <word>: <definition>
+          Story:<short story>
         Text:
         \`\`\`${words}\`\`\`
         `

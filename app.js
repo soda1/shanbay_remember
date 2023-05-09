@@ -54,7 +54,7 @@ async function chatGPT(words) {
             *Example*:<usage>
           Story:<short story>
 
-        separate each word content with ------\n
+
         Text:\n
         \`\`\`${words}\`\`\`
         `

@@ -85,7 +85,7 @@ async function sendResult(words) {
   // await send2telegram(await chapGPT(chatGPTMessage));
   const splits = chatGPTMessage.split('Story:')
   const Content = splits[0];
-  const wordContentArray = Content.split('------');
+  const wordContentArray = Content.split('----------');
   for(let i = 0; i < wordContentArray.length; i++){
     await sendText2telegram(wordContentArray[i]);
   }

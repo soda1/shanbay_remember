@@ -47,13 +47,14 @@ async function chatGPT(words) {
         Use the following output format:\n
           <word>: 
             1.<meaning>
-            Example:<usage>
+            *Example*:<usage>
             2.<meaning>
-            Example:<usage>
+            *Example*:<usage>
             3.<meaning>
-            Example:<usage>
+            *Example*:<usage>
           Story:<short story>
 
+        separate each word content with ------\n
         Text:\n
         \`\`\`${words}\`\`\`
         `
@@ -83,7 +84,12 @@ async function sendResult(words) {
   const chatGPTMessage = await chatGPT(cMessage)
   // await send2telegram(await chapGPT(chatGPTMessage));
   const splits = chatGPTMessage.split('Story:')
-  await sendText2telegram(chatGPTMessage);
+  const Content = splits[0];
+  const wordContentArray = Content.split('------');
+  for(let i = 0; i < wordContentArray.length; i++){
+    await sendText2telegram(wordContentArray[i]);
+  }
+  await sendText2telegram(splits[1]);
   const articleName = 'new'
   const child = spawn('edge-tts', ['--text', `"${splits[1].trim()}"`, '--write-media', `${articleName}_article.mp3`]);
   child.stdout.on('data', (data) => {

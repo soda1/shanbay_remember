@@ -72,7 +72,6 @@ export async function sendText2telegram(text, proxy = false) {
     });
   }
   const req = https.request(options, (res) => {
-    console.log(res);
     console.log(`statusCode: ${res.statusCode}`);
     res.on("data", () => {
       console.log("succeed");

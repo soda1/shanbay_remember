@@ -45,7 +45,13 @@ async function chatGPT(words) {
           1 -  provid  three common  meanings of each word, and each meaning have a usage\n
           2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.\n
         Use the following output format:\n
-          <word>: <definition>
+          <word>: 
+            1.<meaning>
+            Example:<usage>
+            2.<meaning>
+            Example:<usage>
+            3.<meaning>
+            Example:<usage>
           Story:<short story>
 
         Text:\n

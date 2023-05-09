@@ -4,8 +4,8 @@ const https = require("https");
 const fs = require("fs");
 var XMLHttpRequest = require('xhr2');
 
-// const ankiURL = process.env.ANKI_URL
-const ankiURL = 'http://43.139.63.70:8765'
+const ankiURL = process.env.ANKI_URL
+// const ankiURL = 'http://43.139.63.70:8765'
 export async function getAnkiNewWords(size) {
   const params = {
     query: "deck:4000-Essential-English-Words is:new"

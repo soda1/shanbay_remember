@@ -10,7 +10,8 @@ const FormData = require('form-data');
 
 const botToken = process.env.TELE_TOKEN
 const chatId = process.env.TELE_CHAT_ID
-
+// const botToken = '5834402568:AAHWCwJW79tMmtnfCLLGvpQzbVZJXLFX8jg'
+// const chatId = '5567559086'
 // Create form data with the message and file attachments
 
 // Send the form data to the bot API using Axios
@@ -71,6 +72,7 @@ export async function sendText2telegram(text, proxy = false) {
     });
   }
   const req = https.request(options, (res) => {
+    console.log(res);
     console.log(`statusCode: ${res.statusCode}`);
     res.on("data", () => {
       console.log("succeed");

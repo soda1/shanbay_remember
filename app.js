@@ -27,7 +27,7 @@ import { sendText2telegram, sendWords2telegram } from "./telegram-api.js"
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
-console.log(process.env.OPENAI_API_KEY)
+// console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAIApi(configuration);
 
 // const openai = new OpenAIApi(configuration, undefined, axiosInstance);
@@ -63,7 +63,9 @@ Word End
   *Example*:<usage>
 Word End
 Story:<short story>
-format end
+
+output format end
+
 Text:\n
 \`\`\`${words}\`\`\`
         `

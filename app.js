@@ -85,6 +85,8 @@ const mp3ArticleMap = new Map([
   ["REVIEW", "review"],
 ])
 
+
+
 async function sendResult(words) {
   let message = `Today's ${words.length} new words to learning\n`
   // message += words.map(item => item.word + '[' + item.ipa + ']').join("\n");
@@ -98,10 +100,12 @@ async function sendResult(words) {
 
   //todo 
   // const wordContentArray = Content.split('----------');
-  for(let i = 0; i < wordContentArray.length; i++){
+  for(let i = 0; i < words.length; i++){
     const wordContent = wordContentArray[i];
+    console.log(wordContent);
     await sendWords2telegram([words[i]]);
     await sendText2telegram(wordContent);
+    sleep(10000);
 
   }
   await sendText2telegram(splits[0]);
@@ -118,6 +122,11 @@ async function sendResult(words) {
     console.log(`child process exited with code ${code}`);
   });
 }
+
+async function sleep(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function main() {
   let words = await getAnkiNewWords(10);
   // console.log(Array.isArray(words))

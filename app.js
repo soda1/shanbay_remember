@@ -108,7 +108,7 @@ async function sendResult(words) {
     sleep(10000);
 
   }
-  await sendText2telegram(splits[0]);
+  // await sendText2telegram(splits[0]);
   await sendText2telegram(splits[1]);
   const articleName = 'new'
   const child = spawn('edge-tts', ['--text', `"${splits[1].trim()}"`, '--write-media', `${articleName}_article.mp3`]);

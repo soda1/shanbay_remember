@@ -40,23 +40,32 @@ async function chatGPT(words) {
     messages: [
       {
         role: "user",
-        content: `you are a good englist teacher, now you will be provided  with some words delimited by triple quotes.\n
-        perform the following action:\n
-          1 -  provid  three common  meanings of each word, and each meaning have a usage\n
-          2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.\n
-        Use the following output format:\n
-          <word>: 
-            1.<meaning>
-            *Example*:<usage>
-            2.<meaning>
-            *Example*:<usage>
-            3.<meaning>
-            *Example*:<usage>
-          Story:<short story>
-
-        separate each word content with ------\n
-        Text:\n
-        \`\`\`${words}\`\`\`
+        content: `
+you are a good englist teacher, now you will be provided  with some words delimited by triple quotes.
+perform the following action:
+  1 -  provid  three common  meanings of each word, and each meaning have a usage
+  2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.
+Use the following output format:
+<word>: 
+  1.<meaning>
+  *Example*:<usage>
+  2.<meaning>
+  *Example*:<usage>
+  3.<meaning>
+  *Example*:<usage>
+Word End
+<word>: 
+  1.<meaning>
+  *Example*:<usage>
+  2.<meaning>
+  *Example*:<usage>
+  3.<meaning>
+  *Example*:<usage>
+Word End
+Story:<short story>
+format end
+Text:\n
+\`\`\`${words}\`\`\`
         `
       }
     ],
@@ -80,16 +89,19 @@ async function sendResult(words) {
   const cMessage = words.map(item => item.word).join(',');;
   // message += "\n";
   await sendText2telegram(message);
-  await sendWords2telegram(words)
   const chatGPTMessage = await chatGPT(cMessage)
   // await send2telegram(await chapGPT(chatGPTMessage));
   const splits = chatGPTMessage.split('Story:')
-  const Content = splits[0];
+  const wordContentArray = splits[0].split("Word End");
+
   //todo 
   // const wordContentArray = Content.split('----------');
-  // for(let i = 0; i < wordContentArray.length; i++){
-  //   await sendText2telegram(wordContentArray[i]);
-  // }
+  for(let i = 0; i < wordContentArray.length; i++){
+    const wordContent = wordContentArray[i];
+    await sendWords2telegram([words[i]]);
+    await sendText2telegram(wordContent);
+
+  }
   await sendText2telegram(splits[0]);
   await sendText2telegram(splits[1]);
   const articleName = 'new'

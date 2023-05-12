@@ -17,8 +17,7 @@ export function setBotToken(token){
 export function setChatId(chat_id){
   chatId = chat_id;
 }
-// const botToken = '5834402568:AAHWCwJW79tMmtnfCLLGvpQzbVZJXLFX8jg'
-// const chatId = '5567559086'
+
 // Create form data with the message and file attachments
 
 // Send the form data to the bot API using Axios

@@ -98,10 +98,12 @@ async function sendResult(words) {
     const wordContent = wordContentArray[i];
     console.log(wordContent);
     await sendWords2telegram([words[i]]);
+    sleep(10000);
     await sendText2telegram(wordContent);
     sleep(10000);
 
   }
+  sleep(10000);
   // await sendText2telegram(splits[0]);
   await sendText2telegram(splits[1]);
   const articleName = 'new'

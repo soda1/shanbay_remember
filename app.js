@@ -56,10 +56,9 @@ For each word, use the following format:
     *Example*:<usage>
 Word End
 at each word definitions 'Word End' must exist
-in the story, use '*' surround each provided word.
 At the end of all the word definitions, add the following:
 Story:<short story>
-at the short story, use '*' surround each provided word.
+in the short story, use * emphasize each provided word.
 
 
 Text:

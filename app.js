@@ -47,7 +47,7 @@ perform the following action:
   2 -  use these provided words write a short story which is less than 200 words, the story should use simple words. each provided word surround  with a single '*' character at the beginning and the end.
 output format:
 For each word, use the following format:
-<word><IPA phonetic symbols>: 
+<word> <IPA phonetic symbols>: 
   1.<meaning>
     *Example*:<usage>
   2.<meaning>

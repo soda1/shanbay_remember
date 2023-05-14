@@ -58,7 +58,7 @@ Word End
 at each word definitions 'Word End' must exist
 At the end of all the word definitions, add the following:
 Story:<short story>
-in the short story, use * emphasize each provided word.
+in the short story, use single * surround each provided word.
 
 
 Text:
@@ -80,12 +80,24 @@ const mp3ArticleMap = new Map([
   ["REVIEW", "review"],
 ])
 
-
+function wrapWordsWithAsterisks(text, words) {
+  // Use regular expression to match words and symbols
+  const regex = new RegExp(`(?<!\\*)\\b(${words.join('|')})\\b(?!\\*)`, 'gi');
+  return text.replace(regex, (match, p1) => {
+    // Check if the matched word is already surrounded by asterisks
+    if (match.startsWith('*') && match.endsWith('*')) {
+      return match;
+    } else {
+      return `*${p1}*`;
+    }
+  });
+}
 
 async function sendResult(words) {
   let message = `Today's ${words.length} new words to learning\n`
   // message += words.map(item => item.word + '[' + item.ipa + ']').join("\n");
-  const cMessage = words.map(item => item.word).join(',');;
+  const wordArray = words.map(item => item.word);
+  const cMessage = wordArray.join(',');;
   // message += "\n";
   await sendText2telegram(message);
   const chatGPTMessage = await chatGPT(cMessage)
@@ -106,7 +118,8 @@ async function sendResult(words) {
   }
   sleep(10000);
   // await sendText2telegram(splits[0]);
-  await sendText2telegram(splits[1]);
+  const story = wrapWordsWithAsterisks(splits[1], wordArray);
+  await sendText2telegram(story);
   const articleName = 'new'
   const child = spawn('edge-tts', ['--text', `"${splits[1].trim()}"`, '--write-media', `${articleName}_article.mp3`]);
   child.stdout.on('data', (data) => {

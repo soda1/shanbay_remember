@@ -11,10 +11,10 @@ const FormData = require('form-data');
 let botToken = process.env.TELE_TOKEN
 let chatId = process.env.TELE_CHAT_ID
 
-export function setBotToken(token){
+export function setBotToken(token) {
   botToken = token;
 }
-export function setChatId(chat_id){
+export function setChatId(chat_id) {
   chatId = chat_id;
 }
 
@@ -54,40 +54,28 @@ export async function sendWords2telegram(words, proxy = false) {
 
 
 export async function sendText2telegram(text, proxy = false) {
+  let axiosInstance = axios;
+  if (proxy) {
+    axiosInstance = axios.create({
+      proxy: {
+        host: '127.0.0.1',
+        port: 7890,
+      }
+    });
+  }
   const data = JSON.stringify({
     chat_id: chatId,
     text: text,
     parse_mode: "Markdown",
   });
-  const options = {
-    hostname: "api.telegram.org",
-    port: 443,
-    path: "/bot" + botToken + "/sendMessage",
-    method: "POST",
+  axiosInstance.post('https://api.telegram.org/bot' + botToken + '/sendMessage', data, {
     headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-  };
-  if (proxy) {
-    options.agent = tunnel.httpsOverHttp({
-      proxy: {
-        host: '127.0.0.1', //代理服务器域名或者ip
-        port: 7890, //代理服务器端口
-      },
-    });
-  }
-  const req = https.request(options, (res) => {
-    console.log(`statusCode: ${res.statusCode}`);
-    res.on("data", () => {
-      console.log("succeed");
-    });
-  });
-
-  req.on("error", (error) => {
-    console.error(error);
-  });
-
-  req.write(data);
-  req.end();
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    console.log(`status: ${res.status}`);
+    console.log(`data: ${JSON.stringify(res.data)}`);
+  }).catch(err => {
+    console.error(err);
+  })
 }

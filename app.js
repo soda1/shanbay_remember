@@ -58,8 +58,6 @@ Word End
 at each word definitions 'Word End' must exist
 At the end of all the word definitions, add the following:
 Story:<short story>
-in the short story, use single * surround each provided word.
-
 
 Text:
 \`\`\`${words}\`\`\`

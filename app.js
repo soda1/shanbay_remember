@@ -43,20 +43,8 @@ async function chatGPT(words) {
         content: `
 you are a good englist teacher, now you will be provided  with some words delimited by triple quotes.
 perform the following action:
-  1 -  provid  three common  meanings of each word, and each meaning have a usage
-  2 -  use these provided words write a short story which is less than 700 words, the story should use simple words.
+  1 -  use these provided words write a short story which is less than 700 words, the story should use simple words.
 output format:
-For each word, use the following format:
-<word> /<IPA phonetic symbols>/: 
-  1.<meaning>
-    *Example*:<usage>
-  2.<meaning>
-    *Example*:<usage>
-  3.<meaning>
-    *Example*:<usage>
-Word End
-at each word definitions 'Word End' must exist
-At the end of all the word definitions, add the following:
 Story:<short story>
 
 Text:
@@ -102,19 +90,19 @@ async function sendResult(words) {
   const text = wrapWordsWithAsterisks(chatGPTMessage, wordArray);
   // await send2telegram(await chapGPT(chatGPTMessage));
   const splits = text.split('Story:')
-  const wordContentArray = splits[0].split("Word End");
+  // const wordContentArray = splits[0].split("Word End");
 
   //todo 
   // const wordContentArray = Content.split('----------');
-  for(let i = 0; i < words.length; i++){
-    const wordContent = wordContentArray[i];
-    console.log(wordContent);
-    await sendWords2telegram([words[i]]);
-    sleep(10000);
-    await sendText2telegram(wordContent);
-    sleep(10000);
+  // for(let i = 0; i < words.length; i++){
+  //   const wordContent = wordContentArray[i];
+  //   console.log(wordContent);
+  //   await sendWords2telegram([words[i]]);
+  //   sleep(10000);
+  //   await sendText2telegram(wordContent);
+  //   sleep(10000);
 
-  }
+  // }
   sleep(10000);
   await sendText2telegram(splits[1]);
   const articleName = 'new'

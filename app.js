@@ -44,7 +44,7 @@ async function chatGPT(words) {
 you are a good englist teacher, now you will be provided  with some words delimited by triple quotes.
 perform the following action:
   1 -  provid  three common  meanings of each word, and each meaning have a usage
-  2 -  use these provided words write a short story which is less than 200 words, the story should use simple words.
+  2 -  use these provided words write a short story which is less than 700 words, the story should use simple words.
 output format:
 For each word, use the following format:
 <word> /<IPA phonetic symbols>/: 
@@ -135,7 +135,7 @@ async function sleep(ms) {
 }
 
 async function main() {
-  let words = await getAnkiNewWords(10);
+  let words = await getAnkiNewWords(50);
   // console.log(Array.isArray(words))
   await sendResult(words);
   // chapGPT(words.join(","));
